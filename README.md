@@ -19,7 +19,7 @@ Add it in your root build.gradle at the end of repositories:
 In your module build.gradle :
 ```groovy
 dependencies {
-  implementation "com.github.Guri999:Lazy-Carousel:0.1.2"
+  implementation "com.github.Guri999:lazy-carousel:0.1.0"
 }
 ```
 
