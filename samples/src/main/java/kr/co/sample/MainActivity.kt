@@ -27,15 +27,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.FilterQuality
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
+import coil.request.ImageRequest
+import coil.size.Precision
 import kr.co.carousel.CarouselScrollType
 import kr.co.carousel.CenterCarousel
+import kr.co.sample.ui.sample.movies
 import kr.co.sample.ui.sample.pokemons
 import kr.co.sample.ui.theme.ComposeCarouselTheme
 import kr.co.scope.zoomedCarouselItems
+import okhttp3.internal.toHexString
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,6 +58,7 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun CarouselSample(paddingValues: PaddingValues = PaddingValues()) {
+    val context = LocalContext.current
     var name by remember { mutableStateOf("name") }
     Column(
         modifier = Modifier
@@ -63,18 +69,37 @@ fun CarouselSample(paddingValues: PaddingValues = PaddingValues()) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-//        CenterZoomedCarousel(
-//            items = movies,
-//            spacing = 1.dp,
-//            itemSize = 100.dp,
-//            modifier = Modifier.height(200.dp)
-//        ) { item, animatedModifier ->
-//            Image(
-//                painter = rememberAsyncImagePainter(item),
-//                contentDescription = null,
-//                modifier = animatedModifier
-//            )
-//        }
+
+        CenterCarousel(
+            modifier = Modifier.height(200.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            zoomedCarouselItems(
+                items = movies,
+                itemSize = 100.dp,
+                zoomItemSize = 100.dp * 2f,
+            ) { item, isFocus ->
+
+            Card(elevation = CardDefaults.elevatedCardElevation()) {
+                Column(
+                    modifier = Modifier
+                        .background(Color.White)
+                        .padding(12.dp)
+                ) {
+                    Image(
+                        painter = rememberAsyncImagePainter(
+                            model = ImageRequest.Builder(context)
+                                .data(item)
+                                .size(100 * 2)
+                                .build(),
+                        ),
+                        contentDescription = item.toHexString(),
+                        modifier = Modifier.fillMaxSize()
+                    )
+                }
+            }
+        }
+    }
 
         val itemSize = 50.dp
         CenterCarousel(
@@ -88,7 +113,6 @@ fun CarouselSample(paddingValues: PaddingValues = PaddingValues()) {
                 scrollType = CarouselScrollType.INFINITE
             ) { item, isFocus ->
                 if (isFocus) name = item.second
-
                 Card(elevation = CardDefaults.elevatedCardElevation()) {
                     Column(
                         modifier = Modifier
@@ -96,7 +120,12 @@ fun CarouselSample(paddingValues: PaddingValues = PaddingValues()) {
                             .padding(12.dp)
                     ) {
                         Image(
-                            painter = rememberAsyncImagePainter(item.first, filterQuality = FilterQuality.High),
+                            painter = rememberAsyncImagePainter(
+                                model = ImageRequest.Builder(context)
+                                    .data(item.first)
+                                    .size((itemSize * 3f).value.toInt())
+                                    .build(),
+                            ),
                             contentDescription = item.second,
                             modifier = Modifier.fillMaxSize()
                         )

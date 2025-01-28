@@ -37,9 +37,8 @@ CenterCarousel(
         itemSize = itemSize,
         zoomItemSize = itemSize * 3f,
         scrollType = CarouselScrollType.INFINITE
-    ) { item, zoomModifier, isFocus ->
+    ) { item, isFocus ->
         if (isFocus) name = item.second
-
         Card(elevation = CardDefaults.elevatedCardElevation()) {
             Column(
                 modifier = Modifier
@@ -47,9 +46,14 @@ CenterCarousel(
                     .padding(12.dp)
             ) {
                 Image(
-                    painter = rememberAsyncImagePainter(item.first),
+                    painter = rememberAsyncImagePainter(
+                        model = ImageRequest.Builder(context)
+                            .data(item.first)
+                            .size((itemSize * 3f).value.toInt())
+                            .build(),
+                    ),
                     contentDescription = item.second,
-                    modifier = zoomModifier
+                    modifier = Modifier.fillMaxSize()
                 )
             }
         }
@@ -58,4 +62,4 @@ CenterCarousel(
 ```
 By using the `scrollType` you can enable either default scrolling or infinity scrolling
 
-Pass any list of item to `items` parameter, and it will return a `item`, `zoomModifier`, `isFocus`
+Pass any list of item to `items` parameter, and it will return a `item`, `isFocus`
