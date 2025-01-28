@@ -26,6 +26,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -85,7 +86,7 @@ fun CarouselSample(paddingValues: PaddingValues = PaddingValues()) {
                 itemSize = itemSize,
                 zoomItemSize = itemSize * 3f,
                 scrollType = CarouselScrollType.INFINITE
-            ) { item, zoomModifier, isFocus ->
+            ) { item, isFocus ->
                 if (isFocus) name = item.second
 
                 Card(elevation = CardDefaults.elevatedCardElevation()) {
@@ -95,9 +96,9 @@ fun CarouselSample(paddingValues: PaddingValues = PaddingValues()) {
                             .padding(12.dp)
                     ) {
                         Image(
-                            painter = rememberAsyncImagePainter(item.first),
+                            painter = rememberAsyncImagePainter(item.first, filterQuality = FilterQuality.High),
                             contentDescription = item.second,
-                            modifier = zoomModifier
+                            modifier = Modifier.fillMaxSize()
                         )
                     }
                 }

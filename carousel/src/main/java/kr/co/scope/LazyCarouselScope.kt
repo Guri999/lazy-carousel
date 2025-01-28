@@ -2,6 +2,7 @@ package kr.co.scope
 
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -37,7 +38,7 @@ fun <T> LazyCarouselScope.zoomedCarouselItems(
     zoomItemSize: Dp,
     unfocusedAlpha: Float = 0.5f,
     scrollType: CarouselScrollType = CarouselScrollType.DEFAULT,
-    itemContent: @Composable (item: T, zoomModifier: Modifier, isFocus: Boolean) -> Unit
+    itemContent: @Composable (item: T, isFocus: Boolean) -> Unit
 ) {
 
     lazyCarouselState.initialize(zoomItemSize, items.size, scrollType)
@@ -55,13 +56,16 @@ fun <T> LazyCarouselScope.zoomedCarouselItems(
             finishedListener = { this@zoomedCarouselItems.lazyCarouselState.setAnimationEnd(true) }
         )
         val animatedAlpha by animateFloatAsState(targetAlpha, label = "animatedAlpha")
-        itemContent(
-            item,
-            Modifier
+        Box(
+            modifier = Modifier
                 .size(animatedSize)
                 .alpha(animatedAlpha),
-            isCurrentPage
-        )
+        ) {
+            itemContent(
+                item,
+                isCurrentPage
+            )
+        }
     }
 }
 
