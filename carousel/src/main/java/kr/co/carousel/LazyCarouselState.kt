@@ -56,7 +56,6 @@ class LazyCarouselState(
 
     suspend fun animateToCenterItem(screenWidth: Float) {
         snapshotFlow { listState.isScrollInProgress }
-            .onStart { emit(false) }
             .collect { isScrolling ->
                 if (isScrolling.not() && isAnimationEnd.value) {
                     val scrollOffset = calculateCenterOffset(screenWidth)
